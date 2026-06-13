@@ -4,24 +4,43 @@ export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(() => {
-  try {
-    const userData = localStorage.getItem("user");
+    try {
+      const userData = localStorage.getItem("user");
 
-    if (!userData || userData === "undefined") {
+      if (
+        !userData ||
+        userData === "undefined" ||
+        userData === "null"
+      ) {
+        return null;
+      }
+
+      return JSON.parse(userData);
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+      localStorage.removeItem("user");
       return null;
     }
+  });
 
-    return JSON.parse(userData);
-  } catch (error) {
-    console.error("Error parsing user data:", error);
-    localStorage.removeItem("user");
-    return null;
-  }
-});
   const login = (data) => {
-    localStorage.setItem("user", JSON.stringify(data.user));
-    localStorage.setItem("token", data.token);
-    setUser(data.user);
+    try {
+      if (data?.user) {
+        localStorage.setItem(
+          "user",
+          JSON.stringify(data.user)
+        );
+        setUser(data.user);
+      } else {
+        console.warn("No user data received from backend");
+      }
+
+      if (data?.token) {
+        localStorage.setItem("token", data.token);
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+    }
   };
 
   const logout = () => {
@@ -31,7 +50,13 @@ export const AuthProvider = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        login,
+        logout,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
