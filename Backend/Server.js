@@ -14,7 +14,14 @@ const startServer = async () => {
   await connectDB();
   await seedSampleData();
 
-  app.use(cors());
+  // Configure CORS to allow requests from frontend deployment
+  app.use(cors({
+    origin: "https://smart-learning-app-1.onrender.com",
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+  }));
+  
   app.use(express.json());
 
   app.use("/api/auth", require("./routes/AuthRoutes"));
