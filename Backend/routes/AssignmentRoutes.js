@@ -2,8 +2,8 @@ const express = require("express");
 
 const router = express.Router();
 
-const auth = require("../middleware/authMiddleware");
-const role = require("../middleware/roleMiddleware");
+const auth = require("../middleware/AuthMiddleware");
+const role = require("../middleware/RoleMiddleware");
 
 const {
   createAssignment,
@@ -11,7 +11,7 @@ const {
   getAssignmentById,
   submitAssignment,
   evaluateAssignment
-} = require("../controllers/assignmentController");
+} = require("../controllers/AssignmentController");
 
 router.post(
   "/",
