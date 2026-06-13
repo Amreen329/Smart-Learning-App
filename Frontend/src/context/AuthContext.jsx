@@ -3,10 +3,14 @@ import { createContext, useState } from "react";
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(
-    const userData = localStorage.getItem("user");
-const user = userData ? JSON.parse(userData) : null;
-  );
+  const [user, setUser] = useState(() => {
+    try {
+      return JSON.parse(localStorage.getItem("user") || "null");
+    } catch (error) {
+      console.error("Error parsing user data:", error);
+      return null;
+    }
+  });
 
   const login = (data) => {
     localStorage.setItem("user", JSON.stringify(data.user));
@@ -15,7 +19,8 @@ const user = userData ? JSON.parse(userData) : null;
   };
 
   const logout = () => {
-    localStorage.clear();
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
     setUser(null);
   };
 
