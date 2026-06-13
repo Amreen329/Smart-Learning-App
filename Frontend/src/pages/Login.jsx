@@ -23,12 +23,19 @@ function Login() {
 
     try {
       const { data } = await API.post("/auth/login", {
-        email,
-        password,
-      });
+  email,
+  password,
+});
 
-      login(data);
-      navigate("/dashboard");
+console.log("Login Response:", data);
+
+if (!data?.token) {
+  setError("Invalid response from server");
+  return;
+}
+
+login(data);
+navigate("/dashboard");
     } catch (err) {
       const message = err.response?.data?.message || "Login failed";
       setError(message);
