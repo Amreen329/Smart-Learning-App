@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "http://localhost:5000/api",
+  baseURL: "https://smart-learning-app-1.onrender.com",
 });
 
 API.interceptors.request.use((config) => {
